@@ -9,7 +9,7 @@ Summary:        EulerOS custom build tool for obs
 License:        GPL
 Group:          System/Management
 Version:        1.0
-Release:        17%{?dist}
+Release:        18
 BuildRoot:      %{_tmppath}/%{name}-%{version}
 Source0:        %{name}-%{version}.tar.bz2
 BuildRequires:  util-linux coreutils
@@ -446,5 +446,5 @@ rm -rf %{_tmppath}/%{name}-%{version}
 rm -rf $RPM_BUILD_DIR/%{name}-%{version}
 
 %changelog
-* Tue Jul 14 2020 Buildteam <buildteam@openeuler.org> - 1.0-17
+* Tue Jul 14 2020 Buildteam <buildteam@openeuler.org> - 1.0-18
 - package init
