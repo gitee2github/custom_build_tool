@@ -1,0 +1,10 @@
+if test -f /.build.command; then
+
+    rpm --eval "%{upload_build_include}" > /tmp/ub_include
+    ub_include=$(cat /tmp/ub_include | awk '{for(i=1;i<NF;i++){printf($i);printf(".spec|")}printf($NF);printf(".spec")}')
+
+    cat /.build.command | egrep "$ub_include" &> /tmp/tmp.ub
+    if [ "$?" == "0" ]; then
+        sed -i 's/"rpmbuild"/"rpmbuild-ub"/g' /.build.command
+    fi
+fi
