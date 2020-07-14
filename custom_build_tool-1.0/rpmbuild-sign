@@ -1,0 +1,11 @@
+if test -f /.build.command; then
+    sed -i 's/--nosignature/--sign/g' /.build.command
+    grep  cups.spec  /.build.command > /dev/null
+    if [ $? -eq 0 ]; then
+        sed -i 's/--sign/--nosignature/g' /.build.command
+        sed -i 's/exec //g' /.build.command
+        sed -i '$aexec "find" "/home/abuild/rpmbuild" "-name" "*.rpm" | "xargs" "-r" "rpmsign" "--addsign"' /.build.command
+    fi
+    chown -R abuild:abuild /home/abuild/.gnupg
+    /home/abuild/chmod 700 /home/abuild/.gnupg
+fi
