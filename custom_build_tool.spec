@@ -5,7 +5,7 @@
 %define debug_package %{nil}
 %endif
 Name:           custom_build_tool
-Summary:        EulerOS custom build tool for obs
+Summary:        custom build tool for obs
 License:        GPL
 Group:          System/Management
 Version:        1.0
@@ -16,7 +16,6 @@ BuildRequires:  util-linux coreutils
 BuildRequires: -custom_build_tool-nocheck
 BuildRequires: -obs-env
 BuildRequires: -gcc_secure
-BuildRequires: -custom_build_tool-sign
 BuildRequires: -bep-env
 BuildRequires: -custom_build_tool-gcov
 BuildRequires: -custom_build_tool-san
@@ -34,15 +33,6 @@ Requires:custom_build_tool
 Summary: add nocheck to rpmbuild
 
 %description nocheck
-
-%package sign
-Group: Development/Libraries
-BuildArch: noarch
-Requires:bash rpm-build rpm-sign sed util-linux coreutils gnupg2
-Requires:custom_build_tool
-Summary: add sign to rpmbuild
-
-%description sign
 
 %package nodebug
 Group: Development/Libraries
@@ -115,10 +105,7 @@ mkdir -p %{buildroot}/home/abuild/.gnupg/
 mkdir -p %{buildroot}/root/.gnupg/
 install -m 700 %{name}-%{version}/*.sh %{buildroot}/opt/custom_build_tool/
 install -m 600 %{name}-%{version}/rpmbuild-nocheck %{buildroot}/opt/custom_build_tool/
-install -m 600 %{name}-%{version}/rpmbuild-sign %{buildroot}/opt/custom_build_tool/
 install -m 600 %{name}-%{version}/rpmbuild-target %{buildroot}/opt/custom_build_tool/
-cp -a %{name}-%{version}/gpg/* %{buildroot}/root/.gnupg/
-cp -a %{name}-%{version}/gpg/* %{buildroot}/home/abuild/.gnupg/
 %if %{with_gcov}
 install -m 600 %{name}-%{version}/rpmbuild-gcov %{buildroot}/opt/custom_build_tool/
 %endif
@@ -134,8 +121,6 @@ install -m 600 %{name}-%{version}/rpmbuild-ub %{buildroot}/opt/custom_build_tool
 bash /opt/custom_build_tool/custom_build_tool.sh
 %post nocheck
 sed -i '/####add parameter start/r /opt/custom_build_tool/rpmbuild-nocheck' /usr/bin/rpmbuild
-%post sign
-sed -i '/####add parameter start/r /opt/custom_build_tool/rpmbuild-sign' /usr/bin/rpmbuild
 %post nodebug
 sed -i 's/strict=true/strict=false/' /usr/lib/rpm/find-debuginfo.sh
 %post target
@@ -160,7 +145,7 @@ ret=\$?
 
 if [ \$ret -eq 0 ]; then
     source /opt/custom_build_tool/upload.sh
-    echo "Gcov version has been compiledddddddddddddddddddddddddddd"
+    echo "Gcov version has been compiled"
 else
     if file /usr/bin/gcc | grep ELF; then
         exit \$ret
@@ -287,7 +272,7 @@ export ASAN_OPTIONS=detect_leaks=0:halt_on_error=0
 ${old_rpmbuild} "\$@"
 
 ret=\$?
-echo "SAN version has been compiledddddddddddddddddddddddddddd"
+echo "SAN version has been compiled"
 exit \$ret
 
 END1
@@ -358,8 +343,6 @@ fi
 rm -rf /opt/custom_build_tool/custom_build_tool.sh
 %postun nocheck
 rm -rf /opt/custom_build_tool/rpmbuild-nocheck
-%postun sign
-rm -rf /opt/custom_build_tool/rpmbuild-sign
 %postun target
 rm -rf /opt/custom_build_tool/rpmbuild-target
 %if %{with_gcov}
@@ -386,14 +369,6 @@ rm -rf /opt/custom_build_tool/rpmbuild-ub
 %dir /opt
 %dir /opt/custom_build_tool
 /opt/custom_build_tool/rpmbuild-nocheck
-
-%files sign
-%defattr(-,root,root)
-%dir /opt
-%dir /opt/custom_build_tool
-/root/.gnupg/*
-/home/abuild/.gnupg/*
-/opt/custom_build_tool/rpmbuild-sign
 
 %files nodebug
 %defattr(-,root,root)
