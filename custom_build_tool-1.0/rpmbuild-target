@@ -1,3 +1,0 @@
-if test -f /.build.command; then
-    sed -i 's/)"/)" "--target=armv7l"/g' /.build.command
-fi

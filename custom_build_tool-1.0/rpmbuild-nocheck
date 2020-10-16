@@ -1,9 +1,0 @@
-if test -f /.build.command; then
-    nocheck_exclude=`rpm --eval %{nocheck_exclude}`
-    nocheck_exclude=`echo $nocheck_exclude | sed 's# #.spec|#g'`
-    nocheck_exclude=`echo $nocheck_exclude | sed 's#$#.spec#g'`
-    cat /.build.command | egrep "$nocheck_exclude" >/dev/null 2>&1
-    if [ $? != 0 ]; then
-        sed -i 's/)"/)" "--nocheck"/g' /.build.command
-    fi
-fi

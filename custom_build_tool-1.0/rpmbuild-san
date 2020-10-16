@@ -1,1 +1,0 @@
-sed -i 's/"rpmbuild"/"rpmbuild-san"/g' /.build.command
