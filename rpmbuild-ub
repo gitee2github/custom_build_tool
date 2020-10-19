@@ -1,0 +1,25 @@
+:<<!
+ * Copyright (c) Huawei Technologies Co., Ltd. 2018-2019. All rights reserved.
+ * iSulad licensed under the Mulan PSL v2.
+ * You can use this software according to the terms and conditions of the Mulan PSL v2.
+ * You may obtain a copy of Mulan PSL v2 at:
+ *     http://license.coscl.org.cn/MulanPSL2
+ * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
+ * PURPOSE.
+ * See the Mulan PSL v2 for more details.
+ * Author: zhuchunyi
+ * Create: 2020-10-16
+ * Description: provide container buffer functions
+!
+
+if test -f /.build.command; then
+
+    rpm --eval "%{upload_build_include}" > /tmp/ub_include
+    ub_include=$(cat /tmp/ub_include | awk '{for(i=1;i<NF;i++){printf($i);printf(".spec|")}printf($NF);printf(".spec")}')
+
+    cat /.build.command | egrep "$ub_include" &> /tmp/tmp.ub
+    if [ "$?" == "0" ]; then
+        sed -i 's/"rpmbuild"/"rpmbuild-ub"/g' /.build.command
+    fi
+fi
